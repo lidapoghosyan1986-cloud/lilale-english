@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lilale — Stages intensifs & cours d'anglais à Mions : primaire, collège, lycée, adultes</title>
+<meta name="description" content="Cours d'anglais à Mions en petits groupes de 6 personnes maximum : CM1-CM2, collégiens, lycéens et adultes. Stages intensifs en août, cours hebdomadaires dès septembre. Professeure certifiée CELTA. Contact : 06 99 75 14 19.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --encre:#241A45;
+    --encre-2:#3B2D66;
+    --texte:#3A3354;
+    --papier:#FFFFFF;
+    --papier-doux:#F6F2FC;
+    --lilas:#7C5CD6;
+    --lilas-fonce:#5F41B5;
+    --lilas-doux:#E5D9FB;
+    --hl:#E3D2FF;
+    --corail:#FF5C49;
+    --corail-fonce:#E04634;
+    --menthe:#16A085;
+    --ambre:#E8962E;
+    --ligne:#E2DAF2;
+    --radius:18px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Nunito Sans',sans-serif;
+    color:var(--texte);
+    background:var(--papier);
+    line-height:1.65;
+    font-size:17px;
+  }
+  h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;color:var(--encre);line-height:1.15}
+  a{color:inherit}
+
+  .hl{
+    background:linear-gradient(transparent 55%, var(--hl) 55%, var(--hl) 92%, transparent 92%);
+    padding:0 .1em;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+  /* ---------- bandeau ---------- */
+  .bandeau{background:var(--encre);color:#fff;text-align:center;padding:9px 16px;font-size:.92rem;font-weight:700}
+  .bandeau b{color:var(--hl)}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.95);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--ligne);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:16px}
+  .logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.4rem;color:var(--encre);text-decoration:none;display:flex;align-items:center;gap:10px}
+  .logo .dot{width:15px;height:15px;border-radius:50% 50% 50% 4px;background:linear-gradient(135deg,var(--lilas),#A98BEF);display:inline-block;box-shadow:0 0 0 4px var(--lilas-doux)}
+  .nav-links{display:flex;gap:24px;align-items:center;list-style:none}
+  .nav-links a{text-decoration:none;font-weight:700;font-size:.93rem;color:var(--encre-2)}
+  .nav-links a:hover{color:var(--lilas)}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;background:var(--corail);color:#fff;text-decoration:none;
+    font-weight:800;padding:13px 26px;border-radius:999px;border:none;cursor:pointer;
+    font-size:1rem;font-family:'Nunito Sans',sans-serif;
+    box-shadow:0 4px 0 var(--corail-fonce);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:hover{transform:translateY(2px);box-shadow:0 2px 0 var(--corail-fonce)}
+  .btn:focus-visible{outline:3px solid var(--encre);outline-offset:3px}
+  .btn-ghost{background:#fff;color:var(--encre);box-shadow:0 4px 0 var(--ligne);border:2px solid var(--ligne)}
+  .btn-ghost:hover{box-shadow:0 2px 0 var(--ligne)}
+  .burger{display:none;background:none;border:none;font-size:1.8rem;cursor:pointer;color:var(--encre)}
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:linear-gradient(180deg, var(--papier-doux), #fff 88%);
+    padding:64px 0 60px;position:relative;overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(180deg, transparent 0 31px, rgba(124,92,214,.10) 31px 32px);
+    pointer-events:none;
+  }
+  .hero .wrap{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+  .eyebrow{
+    display:inline-block;background:#fff;border:2px solid var(--encre);border-radius:999px;
+    font-weight:800;font-size:.85rem;letter-spacing:.04em;padding:7px 16px;color:var(--encre);
+    margin-bottom:20px;text-transform:uppercase;
+  }
+  .hero h1{font-size:clamp(2.05rem, 4.3vw, 3.2rem);font-weight:800;margin-bottom:18px}
+  .hero p.sub{font-size:1.15rem;margin-bottom:26px;max-width:33em}
+
+  .pour-qui{font-weight:800;color:var(--encre);font-size:.92rem;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+    background:#fff;border:2px solid var(--ligne);border-radius:999px;
+    padding:10px 18px;font-weight:800;font-size:.93rem;color:var(--encre);
+    transition:transform .12s ease, border-color .12s ease;
+  }
+  .chip:hover{transform:translateY(-2px);border-color:var(--lilas)}
+  .chip .pastille{width:10px;height:10px;border-radius:50%}
+
+  .hero .ctas{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-card{
+    background:#fff;border:2px solid var(--encre);border-radius:var(--radius);
+    box-shadow:8px 8px 0 var(--lilas-doux);padding:28px;
+  }
+  .hero-card h3{font-size:1.2rem;margin-bottom:14px}
+  .hero-card ul{list-style:none}
+  .hero-card li{padding:11px 0;border-bottom:1px dashed var(--ligne);display:flex;justify-content:space-between;gap:12px;font-size:.96rem}
+  .hero-card li:last-child{border-bottom:none}
+  .hero-card li b{color:var(--encre)}
+  .tag{background:var(--papier-doux);border-radius:8px;padding:2px 10px;font-weight:800;font-size:.82rem;color:var(--encre-2);white-space:nowrap;align-self:center}
+
+  /* ---------- sections ---------- */
+  section{padding:72px 0}
+  section.alt{background:var(--papier-doux)}
+  .sec-head{max-width:680px;margin:0 auto 44px;text-align:center}
+  .sec-head h2{font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
+  .kicker{font-weight:800;color:var(--lilas);text-transform:uppercase;letter-spacing:.08em;font-size:.85rem;display:block;margin-bottom:10px}
+
+  /* ---------- groupes ---------- */
+  .groupe{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:start}
+  .groupe.inverse{grid-template-columns:.85fr 1.15fr}
+  .groupe.inverse .fiche{order:-1}
+  .groupe-titre{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .groupe-titre .onglet{
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:.82rem;
+    color:#fff;padding:6px 16px;border-radius:10px;letter-spacing:.04em;text-transform:uppercase;
+  }
+  .groupe h2{font-size:clamp(1.5rem,2.6vw,2.1rem)}
+  .groupe .classe{font-weight:800;font-size:.95rem;margin:8px 0 18px}
+  .groupe p{margin-bottom:14px}
+  .groupe ul{list-style:none;margin:6px 0 14px}
+  .groupe li{padding:6px 0 6px 26px;position:relative;font-size:.97rem}
+  .groupe li::before{content:"→";position:absolute;left:0;font-weight:800}
+
+  .g-prim .onglet{background:var(--menthe)} .g-prim li::before,.g-prim .classe{color:var(--menthe)}
+  .g-col .onglet{background:var(--lilas)} .g-col li::before,.g-col .classe{color:var(--lilas)}
+  .g-lyc .onglet{background:var(--encre)} .g-lyc li::before,.g-lyc .classe{color:var(--encre)}
+  .g-adu .onglet{background:var(--ambre)} .g-adu li::before,.g-adu .classe{color:var(--ambre)}
+
+  .fiche{
+    background:#fff;border:2px solid var(--encre);border-radius:var(--radius);
+    padding:26px;position:sticky;top:96px;
+  }
+  .g-prim .fiche{box-shadow:8px 8px 0 rgba(22,160,133,.25)}
+  .g-col  .fiche{box-shadow:8px 8px 0 var(--lilas-doux)}
+  .g-lyc  .fiche{box-shadow:8px 8px 0 rgba(36,26,69,.18)}
+  .g-adu  .fiche{box-shadow:8px 8px 0 rgba(232,150,46,.25)}
+  .fiche h3{font-size:1.05rem;margin-bottom:14px;text-transform:uppercase;letter-spacing:.05em}
+  .fiche table{width:100%;border-collapse:collapse;margin-bottom:18px}
+  .fiche td{padding:9px 0;border-bottom:1px dashed var(--ligne);font-size:.93rem;vertical-align:top}
+  .fiche tr:last-child td{border-bottom:none}
+  .fiche td:first-child{font-weight:800;color:var(--encre);width:46%;padding-right:10px}
+  .fiche .btn{width:100%;justify-content:center}
+
+  /* ---------- stages ---------- */
+  .stage-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+  .stage-info h3{font-size:1.22rem;margin:24px 0 10px}
+  .stage-info h3:first-child{margin-top:0}
+  .planning{
+    background:#fff;border:2px solid var(--encre);border-radius:var(--radius);
+    box-shadow:8px 8px 0 var(--lilas-doux);padding:28px;
+  }
+  .planning h3{margin-bottom:6px}
+  .planning .ssub{font-size:.92rem;margin-bottom:18px}
+  .jour{display:flex;gap:14px;padding:12px 0;border-bottom:1px dashed var(--ligne);align-items:baseline}
+  .jour:last-child{border:none}
+  .heure{font-weight:800;color:var(--encre);min-width:108px;font-size:.92rem;font-family:'Bricolage Grotesque',sans-serif}
+  .jour p{font-size:.95rem}
+  .sessions{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0 6px}
+  .session{
+    background:#fff;border:2px solid var(--ligne);border-radius:12px;
+    padding:10px 16px;font-weight:800;color:var(--encre);font-size:.92rem;
+  }
+  .encart-adultes{
+    margin-top:26px;background:#FFF6EA;border:2px solid var(--ambre);border-radius:14px;padding:18px 22px;
+  }
+  .encart-adultes b{color:var(--encre)}
+
+  /* ---------- tarifs ---------- */
+  .tarif-groupe-titre{
+    font-family:'Bricolage Grotesque',sans-serif;font-weight:800;color:var(--encre);
+    font-size:1.15rem;margin:34px 0 18px;display:flex;align-items:center;gap:12px;
+  }
+  .tarif-groupe-titre:first-of-type{margin-top:0}
+  .tarif-groupe-titre::after{content:"";flex:1;height:2px;background:var(--ligne);border-radius:2px}
+  .tarifs{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
+  .tarifs.quatre{grid-template-columns:repeat(4,1fr)}
+  .tarif{
+    background:#fff;border:2px solid var(--ligne);border-radius:var(--radius);
+    padding:28px 22px;text-align:center;display:flex;flex-direction:column;position:relative;
+  }
+  .tarif.star{border-color:var(--encre);box-shadow:8px 8px 0 var(--hl)}
+  .badge{
+    position:absolute;top:-15px;left:50%;transform:translateX(-50%);
+    background:var(--hl);color:var(--encre);font-weight:800;font-size:.78rem;
+    padding:5px 16px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;
+  }
+  .tarif h3{font-size:1.06rem;margin-bottom:4px}
+  .tarif .qui{font-size:.88rem;font-weight:700;color:var(--lilas);margin-bottom:14px}
+  .prix{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:2.3rem;color:var(--encre)}
+  .prix small{font-size:1rem;font-weight:700;color:var(--texte)}
+  .par{font-size:.87rem;margin-bottom:6px}
+  .horaire{
+    display:inline-block;background:var(--papier-doux);border-radius:999px;
+    padding:4px 14px;font-weight:800;font-size:.85rem;color:var(--encre);margin-bottom:8px;
+  }
+  .ssprix{
+    display:block;font-size:.85rem;font-weight:800;color:var(--menthe);margin-bottom:12px;
+  }
+  .tarif ul{list-style:none;text-align:left;margin:0 auto;flex:1}
+  .tarif li{padding:5px 0 5px 24px;position:relative;font-size:.9rem}
+  .tarif li::before{content:"✓";position:absolute;left:0;color:var(--menthe);font-weight:800}
+  .note-tarif{text-align:center;margin-top:28px;font-size:.92rem;color:var(--encre-2)}
+  .reducs{
+    margin-top:30px;background:#fff;border:2px dashed var(--lilas);border-radius:var(--radius);
+    padding:24px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:18px;text-align:center;
+  }
+  .reduc .pct{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.5rem;color:var(--lilas)}
+  .reduc p{font-size:.86rem;font-weight:700;color:var(--encre-2)}
+
+
+  /* ---------- contact ---------- */
+  .contact-cartes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:36px}
+  .c-carte{
+    background:#fff;border:2px solid var(--encre);border-radius:var(--radius);
+    padding:30px 24px;text-align:center;text-decoration:none;display:block;
+    transition:transform .12s ease;
+  }
+  .c-carte:hover{transform:translateY(-4px)}
+  .c-carte.tel{box-shadow:8px 8px 0 rgba(255,92,73,.25)}
+  .c-carte.wa{box-shadow:8px 8px 0 rgba(22,160,133,.25)}
+  .c-carte.mail{box-shadow:8px 8px 0 var(--lilas-doux)}
+  .c-carte .ico{font-size:2.2rem;display:block;margin-bottom:10px}
+  .c-carte h3{font-size:1.1rem;margin-bottom:6px}
+  .c-carte .valeur{font-weight:800;font-size:1.15rem;color:var(--encre)}
+  .c-carte .detail{font-size:.88rem;margin-top:6px}
+  .infos-pratiques{
+    background:#fff;border:2px solid var(--ligne);border-radius:var(--radius);
+    padding:26px;font-size:.96rem;
+  }
+  .infos-pratiques h3{font-size:1rem;margin-bottom:6px}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--encre);color:#D8CFF0;padding:48px 0 28px;font-size:.92rem}
+  .foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px;margin-bottom:32px}
+  footer h4{color:#fff;font-size:1rem;margin-bottom:14px}
+  footer ul{list-style:none}
+  footer li{margin-bottom:8px}
+  footer a{color:#D8CFF0;text-decoration:none}
+  footer a:hover{color:var(--hl)}
+  .foot-bas{border-top:1px solid rgba(255,255,255,.15);padding-top:22px;text-align:center;font-size:.82rem;color:#A795D6}
+
+  /* ---------- retour en haut & barre mobile ---------- */
+  #haut{
+    position:fixed;bottom:88px;right:18px;z-index:60;
+    width:46px;height:46px;border-radius:50%;border:2px solid var(--encre);
+    background:#fff;color:var(--encre);font-size:1.2rem;font-weight:800;cursor:pointer;
+    box-shadow:0 4px 12px rgba(36,26,69,.2);display:none;
+  }
+  .barre-mobile{
+    display:none;position:fixed;bottom:0;left:0;right:0;z-index:55;
+    background:#fff;border-top:2px solid var(--ligne);
+    padding:10px 14px;gap:10px;
+  }
+  .barre-mobile a{
+    flex:1;text-align:center;text-decoration:none;font-weight:800;font-size:.95rem;
+    padding:12px 8px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .bm-tel{background:var(--corail);color:#fff}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:960px){
+    .hero .wrap,.stage-grid,.groupe,.groupe.inverse{grid-template-columns:1fr}
+    .groupe.inverse .fiche{order:0}
+    .fiche{position:static}
+    .tarifs,.tarifs.quatre,.contact-cartes{grid-template-columns:1fr 1fr}
+    .reducs{grid-template-columns:1fr 1fr}
+    .nav-links{
+      display:none;position:absolute;top:72px;left:0;right:0;background:#fff;
+      flex-direction:column;padding:20px;border-bottom:2px solid var(--ligne);gap:18px;
+    }
+    .nav-links.open{display:flex}
+    .burger{display:block}
+    .nav .btn{display:none}
+    .barre-mobile{display:flex}
+    body{padding-bottom:72px}
+    .tarif.star{box-shadow:none;border-width:3px}
+  }
+  @media (max-width:620px){
+    section{padding:54px 0}
+    .tarifs,.tarifs.quatre,.contact-cartes,.reducs{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+
+<div class="bandeau">☀️ Stages intensifs d'<b>août 2026</b> à Mions — inscriptions ouvertes par téléphone, <b>6 places par groupe</b></div>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#"><span class="dot"></span>Lilale</a>
+    <nav aria-label="Navigation principale">
+      <ul class="nav-links" id="menu">
+        <li><a href="#primaire">Primaire</a></li>
+        <li><a href="#college">Collège</a></li>
+        <li><a href="#lycee">Lycée</a></li>
+        <li><a href="#adultes">Adultes</a></li>
+        <li><a href="#stages">Stages d'été</a></li>
+        <li><a href="#tarifs">Tarifs</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <a class="btn" href="tel:+33699751419">📞 06 99 75 14 19</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false" onclick="var m=document.getElementById('menu');m.classList.toggle('open');this.setAttribute('aria-expanded',m.classList.contains('open'));">☰</button>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">🇬🇧 Stages intensifs & cours d'anglais à Mions</span>
+      <h1>Apprendre, progresser, <span class="hl">s'amuser !</span></h1>
+      <p class="sub">L'anglais en petits groupes, du CM1 aux adultes : stages intensifs en août, cours hebdomadaires dès septembre. Des groupes par âge et par niveau, où chacun parle à chaque séance.</p>
+      <p class="pour-qui">C'est pour qui ?</p>
+      <div class="chips">
+        <a class="chip" href="#primaire"><span class="pastille" style="background:var(--menthe)"></span>🎒 CM1 – CM2</a>
+        <a class="chip" href="#college"><span class="pastille" style="background:var(--lilas)"></span>📘 Collège</a>
+        <a class="chip" href="#lycee"><span class="pastille" style="background:var(--encre)"></span>🎓 Lycée</a>
+        <a class="chip" href="#adultes"><span class="pastille" style="background:var(--ambre)"></span>💼 Adultes</a>
+      </div>
+      <div class="ctas">
+        <a class="btn" href="tel:+33699751419">📞 Appeler — 06 99 75 14 19</a>
+        <a class="btn btn-ghost" href="#tarifs">Voir les tarifs</a>
+      </div>
+    </div>
+    <aside class="hero-card">
+      <h3>📌 L'essentiel en un coup d'œil</h3>
+      <ul>
+        <li><span><b>☀️ Stages intensifs</b><br>4 semaines au choix</span> <span class="tag">Août 2026</span></li>
+        <li><span><b>📚 Cours hebdomadaires</b><br>septembre → juin</span> <span class="tag">Dès la rentrée</span></li>
+        <li><span><b>👥 Effectif</b><br>ouverture à 4 inscrits, 6 maximum</span> <span class="tag">Par niveau</span></li>
+        <li><span><b>🎓 Professeure certifiée CELTA</b><br>méthode appuyée sur les manuels Cambridge &amp; Oxford</span> <span class="tag">CECRL</span></li>
+        <li><span><b>✅ Évaluation de niveau</b><br>avant toute inscription</span> <span class="tag">Gratuite</span></li>
+      </ul>
+    </aside>
+  </div>
+</div>
+
+<!-- ================= PRIMAIRE ================= -->
+<section id="primaire">
+  <div class="wrap">
+    <div class="groupe g-prim">
+      <div>
+        <div class="groupe-titre"><span class="onglet">🎒 Primaire</span></div>
+        <h2>CM1 – CM2 : <span class="hl">aimer l'anglais</span> avant tout</h2>
+        <p class="classe">Éveil, jeu et premières vraies conversations</p>
+        <p>À 9-10 ans, l'oreille et la prononciation se forment avec une facilité qui ne reviendra plus. Ici, l'anglais s'apprend en jouant, en chantant et en parlant — et devient un moment attendu de la semaine, pas une matière de plus.</p>
+        <ul>
+          <li>Prononciation et oreille anglophone dès le plus jeune âge</li>
+          <li>Premières phrases complètes et vocabulaire concret</li>
+          <li>Préparation en douceur de l'entrée en 6e</li>
+          <li>Aucun prérequis : les vrais débutants sont les bienvenus</li>
+        </ul>
+      </div>
+      <aside class="fiche">
+        <h3>Fiche pratique · Primaire</h3>
+        <table>
+          <tr><td>👧 Pour qui</td><td>Élèves de CM1 et CM2</td></tr>
+          <tr><td>🕐 Rythme à l'année</td><td>1 h par semaine, hors vacances scolaires</td></tr>
+          <tr><td>☀️ Stage d'été</td><td>5 matinées de 3 h en août</td></tr>
+          <tr><td>👥 Effectif</td><td>4 à 6 enfants, par niveau</td></tr>
+          <tr><td>💶 Tarifs</td><td>80 €/mois · stage 165 €/semaine</td></tr>
+          <tr><td>📅 Créneaux</td><td>Mercredi et samedi</td></tr>
+        </table>
+        <a class="btn" href="tel:+33699751419">📞 Renseignements</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COLLÈGE ================= -->
+<section id="college" class="alt">
+  <div class="wrap">
+    <div class="groupe g-col inverse">
+      <div>
+        <div class="groupe-titre"><span class="onglet">📘 Collège</span></div>
+        <h2>6e – 3e : <span class="hl">comprendre enfin</span> et oser parler</h2>
+        <p class="classe">Des bases consolidées, un oral débloqué</p>
+        <p>Classes nombreuses, grammaire qui s'accumule, confiance qui s'effrite : c'est au collège que beaucoup d'élèves décrochent. Ici, les bases sont remises au clair simplement, puis chaque élève parle à chaque séance — sans moquerie possible dans un groupe de 6.</p>
+        <ul>
+          <li>Grammaire et conjugaison expliquées clairement, sans jargon</li>
+          <li>Expression orale systématique à chaque séance</li>
+          <li>Appui direct sur le programme et les évaluations du collège</li>
+          <li>Préparation de l'oral du Brevet et du niveau A2/B1</li>
+        </ul>
+      </div>
+      <aside class="fiche">
+        <h3>Fiche pratique · Collège</h3>
+        <table>
+          <tr><td>🧑 Pour qui</td><td>Élèves de la 6e à la 3e</td></tr>
+          <tr><td>🕐 Rythme à l'année</td><td>1 h 30 par semaine, hors vacances scolaires</td></tr>
+          <tr><td>☀️ Stage d'été</td><td>5 matinées de 3 h en août</td></tr>
+          <tr><td>👥 Effectif</td><td>4 à 6 élèves, par niveau réel</td></tr>
+          <tr><td>💶 Tarifs</td><td>100 €/mois · stage 165 €/semaine</td></tr>
+          <tr><td>📅 Créneaux</td><td>Mercredi et samedi</td></tr>
+        </table>
+        <a class="btn" href="tel:+33699751419">📞 Renseignements</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LYCÉE ================= -->
+<section id="lycee">
+  <div class="wrap">
+    <div class="groupe g-lyc">
+      <div>
+        <div class="groupe-titre"><span class="onglet">🎓 Lycée</span></div>
+        <h2>2nde – Terminale : <span class="hl">viser plus haut</span> que la moyenne</h2>
+        <p class="classe">Bac, certifications et projets d'études</p>
+        <p>Contrôle continu, épreuves du Bac, Grand Oral, Parcoursup : au lycée, l'anglais devient stratégique. Ce groupe fonctionne comme un atelier exigeant et détendu — débats d'actualité, documents authentiques, méthode des épreuves — avec un objectif fixé dès l'évaluation d'entrée.</p>
+        <ul>
+          <li>Méthodologie des épreuves : compréhension, essai, oral</li>
+          <li>Débats et anglais authentique (presse, podcasts, vidéos)</li>
+          <li>Objectif B2/C1 et préparation aux certifications (Cambridge, IELTS, TOEFL)</li>
+          <li>Accompagnement des projets Parcoursup et d'études à l'étranger</li>
+        </ul>
+      </div>
+      <aside class="fiche">
+        <h3>Fiche pratique · Lycée</h3>
+        <table>
+          <tr><td>🧑‍🎓 Pour qui</td><td>Élèves de la 2nde à la Terminale</td></tr>
+          <tr><td>🕐 Rythme à l'année</td><td>1 h 30 par semaine, hors vacances scolaires</td></tr>
+          <tr><td>☀️ Stage d'été</td><td>5 matinées de 3 h en août</td></tr>
+          <tr><td>👥 Effectif</td><td>4 à 6 élèves, par niveau</td></tr>
+          <tr><td>💶 Tarifs</td><td>110 €/mois · stage 165 €/semaine</td></tr>
+          <tr><td>📅 Créneaux</td><td>Mercredi et samedi</td></tr>
+        </table>
+        <a class="btn" href="tel:+33699751419">📞 Renseignements</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ADULTES ================= -->
+<section id="adultes" class="alt">
+  <div class="wrap">
+    <div class="groupe g-adu inverse">
+      <div>
+        <div class="groupe-titre"><span class="onglet">💼 Adultes</span></div>
+        <h2>Adultes : <span class="hl">reprendre l'anglais</span> sans pression</h2>
+        <p class="classe">Conversation, travail, voyages — à chacun son objectif</p>
+        <p>« Je comprends, mais je n'ose pas parler. » Ces cours sont conçus exactement pour cela : un petit groupe bienveillant du même niveau, où l'on parle dès la première séance — conversation courante, anglais professionnel ou remise à niveau, du grand débutant à l'avancé.</p>
+        <ul>
+          <li>Conversation dès la première séance, dans un cadre détendu</li>
+          <li>Anglais professionnel : réunions, e-mails, entretiens</li>
+          <li>Remise à niveau structurée pour les grands débutants</li>
+          <li>Progression suivie sur l'échelle du CECRL (A1 → C1)</li>
+        </ul>
+      </div>
+      <aside class="fiche">
+        <h3>Fiche pratique · Adultes</h3>
+        <table>
+          <tr><td>🧑‍💼 Pour qui</td><td>Adultes, du grand débutant à l'avancé</td></tr>
+          <tr><td>🕐 Rythme à l'année</td><td>1 h 30 par semaine, en soirée</td></tr>
+          <tr><td>🌙 Stage d'été</td><td>5 soirées de 2 h en août (18h30 – 20h30)</td></tr>
+          <tr><td>👥 Effectif</td><td>4 à 6 personnes, par niveau</td></tr>
+          <tr><td>💶 Tarifs</td><td>120 €/mois · stage 150 €/semaine</td></tr>
+          <tr><td>📅 Créneaux</td><td>Mercredi et samedi</td></tr>
+        </table>
+        <a class="btn" href="tel:+33699751419">📞 Renseignements</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STAGES AOÛT ================= -->
+<section id="stages">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">☀️ Été 2026 · Mions</span>
+      <h2>Stages intensifs d'<span class="hl">août</span> : une semaine pour faire la différence</h2>
+      <p>Une semaine d'immersion pour réactiver les acquis, combler les lacunes et reprendre confiance — juste avant la rentrée pour les élèves, à un rythme adapté pour les adultes.</p>
+    </div>
+    <div class="stage-grid">
+      <div class="stage-info">
+        <h3>🗓️ Les sessions d'août 2026</h3>
+        <p>Élèves (primaire, collège, lycée) : du lundi au vendredi, de 9h30 à 12h30, soit 15 h sur la semaine. Quatre semaines au choix, cumulables (-10 % sur la deuxième) :</p>
+        <div class="sessions">
+          <span class="session">Semaine 1 · 3 → 7 août</span>
+          <span class="session">Semaine 2 · 10 → 14 août</span>
+          <span class="session">Semaine 3 · 17 → 21 août</span>
+          <span class="session">Semaine 4 · 24 → 28 août</span>
+        </div>
+        <p style="font-size:.9rem">Groupes séparés CM1-CM2 / collège / lycée chaque semaine, constitués par niveau. Chaque groupe ouvre à partir de 4 inscrits.</p>
+        <h3>✅ Ce qu'un stage apporte</h3>
+        <p>Après deux mois de vacances, l'essentiel s'est estompé. Une semaine intensive réactive les réflexes, remet la grammaire au clair et redonne le goût de parler. Un <strong>bilan individuel écrit</strong> est remis en fin de stage, avec des recommandations pour l'année.</p>
+        <div class="encart-adultes">
+          <b>💼 Formule adultes — soirées :</b> du lundi au vendredi, de 18h30 à 20h30, soit 10 h sur la semaine. Conversation intensive et remise en route, en petit groupe de niveau. Mêmes semaines au choix.
+        </div>
+      </div>
+      <div class="planning">
+        <h3>🎯 Une matinée type (élèves)</h3>
+        <p class="ssub">3 h dynamiques, découpées pour que l'attention ne retombe jamais.</p>
+        <div class="jour"><span class="heure">9h30 – 10h15</span><p><strong>🗣️ Warm-up & speaking</strong> — la séance commence en anglais : jeux de conversation, actualité, mises en situation.</p></div>
+        <div class="jour"><span class="heure">10h15 – 11h00</span><p><strong>✏️ Grammaire en action</strong> — un point de langue clé, expliqué simplement puis utilisé immédiatement.</p></div>
+        <div class="jour"><span class="heure">11h00 – 11h15</span><p><strong>🍪 Pause</strong> — goûter et musique en anglais 🎵</p></div>
+        <div class="jour"><span class="heure">11h15 – 12h00</span><p><strong>🎭 Atelier projet</strong> — théâtre, vidéo, débat ou jeu de piste selon l'âge du groupe.</p></div>
+        <div class="jour"><span class="heure">12h00 – 12h30</span><p><strong>🏆 Challenge du jour</strong> — quiz d'équipe pour ancrer ce qui a été appris.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TARIFS ================= -->
+<section id="tarifs" class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">Tarifs clairs, sans surprise</span>
+      <h2>Combien ça <span class="hl">coûte</span> ?</h2>
+      <p>Le matériel pédagogique est inclus, et l'évaluation de niveau avant inscription est gratuite. Chaque groupe ouvre à partir de 4 inscrits (6 maximum).</p>
+    </div>
+
+    <p class="tarif-groupe-titre">☀️ Stages intensifs d'août</p>
+    <div class="tarifs">
+      <div class="tarif">
+        <h3>🎒 Primaire</h3>
+        <p class="qui">CM1 – CM2</p>
+        <p class="prix">165€<small> / semaine</small></p>
+        <p class="par">15 h de cours · matinées</p>
+        <span class="horaire">soit 11 € / heure</span>
+        <span class="ssprix">2e enfant : 155 € 👧👦</span>
+        <ul>
+          <li>5 matinées de 3 h (9h30 – 12h30)</li>
+          <li>Groupe de 6 enfants maximum</li>
+          <li>Jeux, projets et mises en situation</li>
+          <li>Matériel et goûter inclus</li>
+          <li>Bilan individuel remis aux parents</li>
+        </ul>
+      </div>
+      <div class="tarif star">
+        <span class="badge">⭐ Le plus demandé</span>
+        <h3>📘 Collège &amp; Lycée</h3>
+        <p class="qui">6e – Terminale</p>
+        <p class="prix">165€<small> / semaine</small></p>
+        <p class="par">15 h de cours · matinées</p>
+        <span class="horaire">soit 11 € / heure</span>
+        <span class="ssprix">2e enfant : 155 € 👧👦</span>
+        <ul>
+          <li>5 matinées de 3 h (9h30 – 12h30)</li>
+          <li>Groupe de 6 élèves max, par niveau</li>
+          <li>Remise à niveau + approfondissement</li>
+          <li>-10 % sur une 2e semaine de stage</li>
+          <li>Bilan individuel + recommandations</li>
+        </ul>
+      </div>
+      <div class="tarif">
+        <h3>💼 Adultes — soirées</h3>
+        <p class="qui">Tous niveaux</p>
+        <p class="prix">150€<small> / semaine</small></p>
+        <p class="par">10 h de cours · 18h30 – 20h30</p>
+        <span class="horaire">soit 15 € / heure</span>
+        <ul>
+          <li>5 soirées de 2 h, du lundi au vendredi</li>
+          <li>Groupe de 6 personnes max, par niveau</li>
+          <li>Conversation intensive et sujets d'actualité</li>
+          <li>Supports authentiques</li>
+          <li>Bilan de niveau CECRL en fin de stage</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="tarif-groupe-titre">📚 Cours hebdomadaires à l'année (septembre → juin)</p>
+    <div class="tarifs quatre">
+      <div class="tarif">
+        <h3>🎒 Primaire</h3>
+        <p class="qui">CM1 – CM2 · 1 h / semaine</p>
+        <p class="prix">80€<small> / mois</small></p>
+        <p class="par">hors vacances scolaires</p>
+        <span class="horaire">soit 20 € / heure</span>
+        <ul>
+          <li>Groupe fixe de 4 à 6 enfants</li>
+          <li>Activités ludiques et interactives</li>
+          <li>Projets de progression chaque trimestre</li>
+        </ul>
+      </div>
+      <div class="tarif">
+        <h3>📘 Collège</h3>
+        <p class="qui">6e – 3e · 1 h 30 / semaine</p>
+        <p class="prix">100€<small> / mois</small></p>
+        <p class="par">hors vacances scolaires</p>
+        <span class="horaire">soit 15 € / heure</span>
+        <ul>
+          <li>Groupe fixe de 4 à 6 élèves, par niveau</li>
+          <li>Suivi du programme scolaire</li>
+          <li>Point de progression chaque trimestre</li>
+        </ul>
+      </div>
+      <div class="tarif">
+        <h3>🎓 Lycée</h3>
+        <p class="qui">2nde – Terminale · 1 h 30 / semaine</p>
+        <p class="prix">110€<small> / mois</small></p>
+        <p class="par">hors vacances scolaires</p>
+        <span class="horaire">soit 16,50 € / heure</span>
+        <ul>
+          <li>Groupe fixe de 4 à 6 élèves, par niveau</li>
+          <li>Méthodologie et préparation examens</li>
+          <li>Suivi de progression CECRL</li>
+        </ul>
+      </div>
+      <div class="tarif">
+        <h3>💼 Adultes</h3>
+        <p class="qui">Tous niveaux · 1 h 30 / semaine</p>
+        <p class="prix">120€<small> / mois</small></p>
+        <p class="par">créneaux en soirée</p>
+        <span class="horaire">soit 20 € / heure</span>
+        <ul>
+          <li>Groupe fixe de 4 à 6 personnes</li>
+          <li>Conversation, anglais pro ou remise à niveau</li>
+          <li>Progression suivie sur l'échelle CECRL</li>
+        </ul>
+      </div>
+    </div>
+
+        <div class="reducs">
+      <div class="reduc"><span class="pct">-10 %</span><p>2e semaine de stage</p></div>
+      <div class="reduc"><span class="pct">-10 %</span><p>2e enfant d'une même famille</p></div>
+      <div class="reduc"><span class="pct">-15 %</span><p>3e enfant et plus</p></div>
+      <div class="reduc"><span class="pct">-10 %</span><p>inscription à l'année dans le mois suivant un stage</p></div>
+      <div class="reduc"><span class="pct">-10 %</span><p>parrainage 🤝 — cumulable avec les autres réductions</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">Renseignements & inscriptions</span>
+      <h2>Un niveau à évaluer, une question, une place à réserver ? <span class="hl">Un appel suffit</span></h2>
+      <p>L'évaluation de niveau est gratuite et sans engagement. Les inscriptions se font par téléphone ou par e-mail, dans l'ordre d'arrivée des demandes.</p>
+    </div>
+    <div class="contact-cartes">
+      <a class="c-carte tel" href="tel:+33699751419">
+        <span class="ico">📞</span>
+        <h3>Par téléphone</h3>
+        <p class="valeur">06 99 75 14 19</p>
+        <p class="detail">Du lundi au samedi, 9h – 19h</p>
+      </a>
+      <a class="c-carte wa" href="https://wa.me/33699751419" target="_blank" rel="noopener">
+        <span class="ico">💬</span>
+        <h3>Par WhatsApp</h3>
+        <p class="valeur">06 99 75 14 19</p>
+        <p class="detail">Message à toute heure, réponse sous 24 h</p>
+      </a>
+      <a class="c-carte mail" href="mailto:lidapoghosyan1986@gmail.com">
+        <span class="ico">✉️</span>
+        <h3>Par e-mail</h3>
+        <p class="valeur" style="word-break:break-all;font-size:1rem">lidapoghosyan1986@gmail.com</p>
+        <p class="detail">Réponse sous 24 h</p>
+      </a>
+    </div>
+    <div class="infos-pratiques">
+      <div>
+        <h3>⏰ Bon à savoir</h3>
+        <p>Les cours ont lieu à <strong>Mions</strong>. Chaque groupe ouvre à partir de 4 inscrits et se remplit dans l'ordre des demandes (6 places). Pour les cours de septembre, un appel dès juin permet de réserver le créneau horaire souhaité.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>Lilale · Mions</h4>
+        <p>Cours d'anglais en petits groupes de 6 personnes maximum : élèves du CM1 à la Terminale et adultes. Stages intensifs en août, cours hebdomadaires de septembre à juin. Professeure certifiée CELTA (Cambridge).</p>
+      </div>
+      <div>
+        <h4>Les groupes</h4>
+        <ul>
+          <li><a href="#primaire">🎒 Primaire (CM1 – CM2)</a></li>
+          <li><a href="#college">📘 Collège (6e – 3e)</a></li>
+          <li><a href="#lycee">🎓 Lycée (2nde – Terminale)</a></li>
+          <li><a href="#adultes">💼 Adultes</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="tel:+33699751419">📞 06 99 75 14 19</a></li>
+          <li><a href="https://wa.me/33699751419" target="_blank" rel="noopener">💬 WhatsApp</a></li>
+          <li><a href="mailto:lidapoghosyan1986@gmail.com">✉️ lidapoghosyan1986@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bas">© 2026 Lilale — Mentions légales · Politique de confidentialité</div>
+  </div>
+</footer>
+
+<button id="haut" aria-label="Retour en haut" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<div class="barre-mobile">
+  <a class="bm-tel" href="tel:+33699751419">📞 Appeler</a>
+</div>
+
+<script>
+  var btnHaut = document.getElementById('haut');
+  window.addEventListener('scroll', function(){
+    btnHaut.style.display = window.scrollY > 600 ? 'block' : 'none';
+  }, {passive:true});
+</script>
+
+</body>
+</html>
