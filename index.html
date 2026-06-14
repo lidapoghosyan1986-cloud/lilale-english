@@ -872,6 +872,8 @@
     #simulateur .sim-li-amount{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600;}
     #simulateur .sim-li.is-discount .sim-li-name{color:var(--green);font-weight:600;padding-left:14px;}
     #simulateur .sim-li.is-discount .sim-li-amount{color:var(--green);}
+    #simulateur .sim-li.is-family{border-top:1px dashed var(--line);}
+    #simulateur .sim-li.is-family .sim-li-name{padding-left:0;font-weight:700;}
     #simulateur .sim-empty{padding:18px 0;color:var(--muted);font-size:.9rem;text-align:center;}
 
     #simulateur .sim-total{
@@ -952,6 +954,15 @@
       return s + " €";
     }
 
+    // Ligne de réduction appliquée une seule fois à toute la famille.
+    function addFamilyDiscount(body, label, amount){
+      var el = document.createElement("div");
+      el.className = "sim-li is-discount is-family";
+      el.innerHTML = '<span class="sim-li-name">🤝 '+label+'</span>'+
+                     '<span class="sim-li-amount">'+eur(amount)+'</span>';
+      body.appendChild(el);
+    }
+
     // Rang familial : on numérote les enfants (non-adultes) dans l'ordre d'ajout.
     function childRanks(){
       var rank = 0, map = {};
@@ -982,8 +993,6 @@
           lines.push({ label:"dont −10 % sur "+(p.weeks-1)+" semaine"+(p.weeks-1>1?"s":""), discount:true,
                        amount: -((p.weeks-1)*weekly*CONFIG.extraWeekOff) });
         }
-        if(opts.parrainage){ var d = subtotal*CONFIG.parrainageOff; subtotal -= d;
-          lines.push({ label:"Parrainage −10 %", discount:true, amount:-d }); }
 
         return { name:"Personne · "+cfg.label.split(" ")[0], detail:detail, lead:base, lines:lines, subtotal:subtotal };
       } else {
@@ -994,10 +1003,6 @@
 
         var sub = monthly, detail2 = c.label + " · à l'année";
         if(note){ lines.push({ label:note, discount:true, amount:-(c.base-monthly) }); }
-        if(opts.afterStage){ var da=sub*CONFIG.afterStageOff; sub-=da;
-          lines.push({ label:"Inscription après stage −10 %", discount:true, amount:-da }); }
-        if(opts.parrainage){ var dp=sub*CONFIG.parrainageOff; sub-=dp;
-          lines.push({ label:"Parrainage −10 %", discount:true, amount:-dp }); }
 
         return { name:"Personne · "+c.label.split(" ")[0], detail:detail2, lead:c.base, lines:lines, subtotal:sub };
       }
@@ -1056,9 +1061,11 @@
         body.innerHTML = '<div class="sim-empty">Ajoutez une personne pour voir l\'estimation.</div>';
       }
 
+      var subs = [];
       state.people.forEach(function(p){
         var r = compute(p, ranks[p.id], opts);
         total += r.subtotal;
+        subs.push(r.subtotal);
 
         var head = document.createElement("div");
         head.className = "sim-li";
@@ -1077,6 +1084,24 @@
         });
       });
 
+      // --- Parrainage : une seule réduction pour TOUTE la famille ---
+      if(state.people.length && opts.parrainage){
+        var dParr = total * CONFIG.parrainageOff; total -= dParr;
+        var parrLabel = (state.formule==="stage")
+          ? "Parrainage −10 % (toute la famille)"
+          : "Parrainage −10 % (toute la famille, chaque mois)";
+        addFamilyDiscount(body, parrLabel, -dParr);
+      }
+
+      // --- Inscription après stage : par élève, 1er mois seulement (cours à l'année) ---
+      var firstMonth = total, hasInscription = false;
+      if(state.formule === "annee" && state.people.length && opts.afterStage){
+        hasInscription = true;
+        var reduc = 0;
+        subs.forEach(function(s){ reduc += s * CONFIG.afterStageOff; });
+        firstMonth = total - reduc;
+      }
+
       var unit = (state.formule==="stage") ? "au total" : "par mois";
       $("sim-receipt-sub").textContent = (state.formule==="stage") ? "Stage d'été" : "Cours à l'année";
       $("sim-total").textContent = state.people.length ? eur(total) : "—";
@@ -1084,7 +1109,13 @@
 
       var noteEl = $("sim-note");
       if(state.formule==="annee" && state.people.length){
-        noteEl.textContent = "Soit env. " + eur(total*10) + " sur l'année (10 mois, sept. → juin).";
+        if(hasInscription){
+          noteEl.textContent = "1er mois : " + eur(firstMonth)
+            + " (inscription après stage −10 % par élève), puis " + eur(total) + " / mois. "
+            + "Soit env. " + eur(firstMonth + total*9) + " sur l'année (10 mois).";
+        } else {
+          noteEl.textContent = "Soit env. " + eur(total*10) + " sur l'année (10 mois, sept. → juin).";
+        }
       } else { noteEl.textContent = ""; }
 
       // --- lien WhatsApp pré-rempli ---
