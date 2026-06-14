@@ -642,7 +642,502 @@
     </div>
   </div>
 </section>
+<!-- ============================================================= -->
+<!--  LILALE · Simulateur de tarif                                  -->
+<!--  Bloc autonome (HTML + CSS + JS, sans dépendance).            -->
+<!--  Collez ce bloc dans votre page, à l'endroit voulu            -->
+<!--  (par exemple juste avant la section #contact).               -->
+<!--                                                                -->
+<!--  ⚙️  POUR MODIFIER LES PRIX ET REMISES : voir l'objet CONFIG   -->
+<!--      tout en haut du <script> ci-dessous. Tout est commenté.  -->
+<!-- ============================================================= -->
 
+<section id="simulateur" class="lilale-sim" aria-labelledby="sim-titre">
+  <div class="sim-wrap">
+
+    <p class="sim-eyebrow">💶 Estimez votre tarif</p>
+    <h2 id="sim-titre" class="sim-h2">Votre situation, votre tarif</h2>
+    <p class="sim-intro">
+      Décrivez votre situation : le simulateur applique automatiquement les
+      réductions (2<sup>e</sup>&nbsp;enfant, semaines supplémentaires, parrainage…)
+      et affiche une estimation. Le tarif définitif est confirmé lors de
+      l'évaluation gratuite, sans engagement.
+    </p>
+
+    <!-- Choix de la formule -->
+    <div class="sim-toggle" role="tablist" aria-label="Choix de la formule">
+      <button type="button" id="sim-formule-stage" class="sim-toggle-btn is-active"
+              role="tab" aria-selected="true" data-formule="stage">
+        ☀️ Stage d'été <span>(août, à la semaine)</span>
+      </button>
+      <button type="button" id="sim-formule-annee" class="sim-toggle-btn"
+              role="tab" aria-selected="false" data-formule="annee">
+        📚 Cours à l'année <span>(par mois)</span>
+      </button>
+    </div>
+
+    <div class="sim-grid">
+
+      <!-- Colonne formulaire -->
+      <div class="sim-form" aria-label="Vos inscriptions">
+        <div class="sim-people" id="sim-people"><!-- lignes injectées en JS --></div>
+
+        <button type="button" class="sim-add" id="sim-add">
+          ＋ Ajouter une personne
+        </button>
+
+        <fieldset class="sim-options">
+          <legend>Réductions applicables</legend>
+          <label class="sim-check">
+            <input type="checkbox" id="sim-parrainage">
+            <span>🤝 Parrainage <em>(−10 %, cumulable)</em></span>
+          </label>
+          <label class="sim-check" id="sim-after-stage-wrap" hidden>
+            <input type="checkbox" id="sim-after-stage">
+            <span>📅 Inscription à l'année dans le mois suivant un stage <em>(−10 %)</em></span>
+          </label>
+        </fieldset>
+      </div>
+
+      <!-- Colonne reçu / devis -->
+      <div class="sim-receipt" aria-live="polite" aria-label="Estimation détaillée">
+        <div class="sim-receipt-head">
+          <span>🧾 Votre estimation</span>
+          <span id="sim-receipt-sub" class="sim-receipt-sub">Stage d'été</span>
+        </div>
+        <div class="sim-receipt-body" id="sim-receipt-body"><!-- lignes en JS --></div>
+        <div class="sim-total">
+          <div class="sim-total-label">Tarif estimé</div>
+          <div class="sim-total-value">
+            <span id="sim-total">—</span>
+            <span class="sim-total-unit" id="sim-total-unit"></span>
+          </div>
+        </div>
+        <p class="sim-note" id="sim-note"></p>
+
+        <div class="sim-cta">
+          <a class="sim-btn sim-btn-primary" id="sim-wa" href="#" target="_blank" rel="noopener">
+            💬 Envoyer ma situation sur WhatsApp
+          </a>
+          <a class="sim-btn sim-btn-ghost" href="tel:+33699751419">📞 06 99 75 14 19</a>
+        </div>
+        <p class="sim-disclaimer">
+          Estimation indicative · matériel pédagogique inclus · évaluation de niveau gratuite.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <style>
+    /* ---- Palette & réglages (scopés à #simulateur) ---- */
+    #simulateur.lilale-sim{
+      --sun:#F7B733;          /* jaune soleil — accents/badges */
+      --sun-deep:#C2410C;     /* orange profond — boutons texte blanc */
+      --sky:#1D6FB8;          /* bleu — accent secondaire */
+      --ink:#2B2218;          /* texte principal */
+      --muted:#8A7E6B;        /* texte secondaire */
+      --bg:#FFFBF4;           /* fond crème */
+      --card:#FFFFFF;
+      --soft:#FCEFD7;         /* ambre pâle */
+      --line:#ECE0CD;         /* filets */
+      --green:#2E9E5B;        /* économies */
+      --radius:16px;
+      color:var(--ink);
+      background:var(--bg);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+      line-height:1.5;
+      padding:clamp(28px,5vw,64px) 16px;
+      -webkit-text-size-adjust:100%;
+    }
+    #simulateur .sim-wrap{max-width:980px;margin:0 auto;}
+    #simulateur *{box-sizing:border-box;}
+
+    #simulateur .sim-eyebrow{
+      margin:0 0 6px;font-weight:700;letter-spacing:.04em;
+      text-transform:uppercase;font-size:.78rem;color:var(--sun-deep);
+    }
+    #simulateur .sim-h2{
+      margin:0 0 10px;font-size:clamp(1.7rem,4vw,2.4rem);
+      font-weight:800;letter-spacing:-.01em;line-height:1.1;
+    }
+    #simulateur .sim-intro{margin:0 0 22px;max-width:62ch;color:var(--muted);font-size:1rem;}
+    #simulateur .sim-intro sup{font-size:.7em;}
+
+    /* ---- Toggle formule ---- */
+    #simulateur .sim-toggle{
+      display:inline-flex;gap:6px;padding:6px;margin-bottom:24px;
+      background:var(--soft);border-radius:999px;border:1px solid var(--line);
+      flex-wrap:wrap;
+    }
+    #simulateur .sim-toggle-btn{
+      appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;
+      padding:10px 18px;border-radius:999px;background:transparent;color:var(--ink);
+      transition:background .18s ease,box-shadow .18s ease,transform .18s ease;
+    }
+    #simulateur .sim-toggle-btn span{font-weight:500;color:var(--muted);font-size:.85em;}
+    #simulateur .sim-toggle-btn.is-active{
+      background:var(--card);box-shadow:0 2px 8px rgba(43,34,24,.10);
+    }
+    #simulateur .sim-toggle-btn.is-active span{color:var(--sun-deep);}
+
+    /* ---- Grille ---- */
+    #simulateur .sim-grid{display:grid;grid-template-columns:1fr;gap:20px;}
+    @media(min-width:760px){
+      #simulateur .sim-grid{grid-template-columns:1.15fr .85fr;align-items:start;}
+    }
+
+    /* ---- Formulaire ---- */
+    #simulateur .sim-people{display:flex;flex-direction:column;gap:12px;}
+    #simulateur .sim-person{
+      background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+      padding:14px;display:grid;gap:12px;
+    }
+    #simulateur .sim-person-top{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    #simulateur .sim-person-tag{
+      font-weight:700;font-size:.82rem;color:var(--sun-deep);
+      display:inline-flex;align-items:center;gap:6px;
+    }
+    #simulateur .sim-remove{
+      appearance:none;border:1px solid var(--line);background:var(--bg);
+      width:30px;height:30px;border-radius:8px;cursor:pointer;color:var(--muted);
+      font-size:1.1rem;line-height:1;transition:background .15s,color .15s;
+    }
+    #simulateur .sim-remove:hover{background:#FDE9E2;color:var(--sun-deep);}
+    #simulateur .sim-fields{display:grid;gap:12px;grid-template-columns:1fr;}
+    #simulateur .sim-person.has-weeks .sim-fields{grid-template-columns:1fr;}
+    @media(min-width:440px){
+      #simulateur .sim-person.has-weeks .sim-fields{grid-template-columns:1.4fr 1fr;}
+    }
+    #simulateur .sim-field label{
+      display:block;font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:5px;
+    }
+    #simulateur .sim-field select{
+      width:100%;appearance:none;font:inherit;font-weight:600;color:var(--ink);
+      padding:11px 36px 11px 13px;border:1px solid var(--line);border-radius:11px;
+      background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238A7E6B' d='M1 1l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 13px center;
+      cursor:pointer;
+    }
+    #simulateur .sim-field select:focus-visible{
+      outline:none;border-color:var(--sun);box-shadow:0 0 0 3px rgba(247,183,51,.35);
+    }
+
+    #simulateur .sim-add{
+      margin-top:14px;appearance:none;width:100%;cursor:pointer;font:inherit;font-weight:700;
+      padding:13px;border:1.5px dashed var(--line);border-radius:var(--radius);
+      background:transparent;color:var(--sun-deep);transition:background .15s,border-color .15s;
+    }
+    #simulateur .sim-add:hover{background:var(--soft);border-color:var(--sun);}
+
+    #simulateur .sim-options{
+      margin:18px 0 0;border:0;padding:0;
+    }
+    #simulateur .sim-options legend{
+      font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;
+      letter-spacing:.04em;margin-bottom:8px;padding:0;
+    }
+    #simulateur .sim-check{
+      display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer;
+      border:1px solid var(--line);border-radius:11px;background:var(--card);margin-bottom:8px;
+      font-size:.92rem;transition:border-color .15s,background .15s;
+    }
+    #simulateur .sim-check:hover{border-color:var(--sun);background:#FFFDF8;}
+    #simulateur .sim-check em{color:var(--muted);font-style:normal;}
+    #simulateur .sim-check input{
+      width:18px;height:18px;accent-color:var(--sun-deep);flex:0 0 auto;cursor:pointer;
+    }
+
+    /* ---- Reçu ---- */
+    #simulateur .sim-receipt{
+      background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+      overflow:hidden;position:sticky;top:16px;
+    }
+    @media(max-width:759px){#simulateur .sim-receipt{position:static;}}
+    #simulateur .sim-receipt-head{
+      display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+      padding:14px 18px;background:var(--soft);border-bottom:1px dashed var(--line);
+      font-weight:800;
+    }
+    #simulateur .sim-receipt-sub{font-size:.78rem;font-weight:600;color:var(--sun-deep);}
+    #simulateur .sim-receipt-body{padding:8px 18px;}
+    #simulateur .sim-li{
+      display:flex;justify-content:space-between;gap:12px;padding:9px 0;
+      border-bottom:1px solid var(--line);font-size:.92rem;
+    }
+    #simulateur .sim-li:last-child{border-bottom:0;}
+    #simulateur .sim-li-name{font-weight:600;}
+    #simulateur .sim-li-detail{display:block;font-size:.78rem;color:var(--muted);font-weight:400;}
+    #simulateur .sim-li-amount{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600;}
+    #simulateur .sim-li.is-discount .sim-li-name{color:var(--green);font-weight:600;padding-left:14px;}
+    #simulateur .sim-li.is-discount .sim-li-amount{color:var(--green);}
+    #simulateur .sim-empty{padding:18px 0;color:var(--muted);font-size:.9rem;text-align:center;}
+
+    #simulateur .sim-total{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:16px 18px;background:var(--sun);color:#3A2A06;
+    }
+    #simulateur .sim-total-label{font-weight:700;}
+    #simulateur .sim-total-value{font-weight:800;font-size:1.55rem;line-height:1;font-variant-numeric:tabular-nums;}
+    #simulateur .sim-total-unit{font-size:.8rem;font-weight:600;opacity:.8;}
+    #simulateur .sim-note{margin:12px 18px 0;font-size:.82rem;color:var(--muted);min-height:1em;}
+
+    #simulateur .sim-cta{display:flex;flex-direction:column;gap:9px;padding:14px 18px 4px;}
+    #simulateur .sim-btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;
+      font-weight:700;padding:13px 16px;border-radius:12px;transition:transform .12s ease,filter .15s ease;
+    }
+    #simulateur .sim-btn:active{transform:translateY(1px);}
+    #simulateur .sim-btn-primary{background:var(--sun-deep);color:#fff;}
+    #simulateur .sim-btn-primary:hover{filter:brightness(1.06);}
+    #simulateur .sim-btn-ghost{background:var(--bg);color:var(--ink);border:1px solid var(--line);}
+    #simulateur .sim-btn-ghost:hover{background:var(--soft);}
+    #simulateur .sim-disclaimer{margin:10px 18px 16px;font-size:.74rem;color:var(--muted);text-align:center;}
+
+    #simulateur :focus-visible{outline:2px solid var(--sky);outline-offset:2px;}
+    @media(prefers-reduced-motion:reduce){#simulateur *{transition:none!important;}}
+  </style>
+
+  <script>
+  (function(){
+    "use strict";
+
+    /* ============================================================= */
+    /*  ⚙️  CONFIG — modifiez librement prix et remises ici           */
+    /* ============================================================= */
+    var CONFIG = {
+      // Tarifs des STAGES d'été (par semaine).
+      // base   = 1er enfant (ou tarif normal) ; second = 2e enfant d'une même famille.
+      stage: {
+        primaire: { label:"Primaire (CM1–CM2)", base:165, second:155 },
+        college:  { label:"Collège (6e–3e)",    base:165, second:155 },
+        lycee:    { label:"Lycée (2nde–Tle)",   base:165, second:155 },
+        adulte:   { label:"Adulte (soirées)",   base:150, second:150 }
+      },
+      // Tarifs des COURS À L'ANNÉE (par mois).
+      annee: {
+        primaire: { label:"Primaire (CM1–CM2)", base:80  },
+        college:  { label:"Collège (6e–3e)",    base:100 },
+        lycee:    { label:"Lycée (2nde–Tle)",   base:110 },
+        adulte:   { label:"Adulte",             base:120 }
+      },
+      // Remises (en proportion : 0.10 = −10 %)
+      extraWeekOff:   0.10,  // chaque semaine de stage après la 1re
+      thirdChildOff:  0.15,  // 3e enfant et + (s'applique au tarif de base)
+      secondChildAnneeOff: 0.10, // 2e enfant — cours à l'année
+      thirdChildAnneeOff:  0.15, // 3e enfant et + — cours à l'année
+      parrainageOff:  0.10,  // parrainage
+      afterStageOff:  0.10   // inscription à l'année dans le mois suivant un stage
+    };
+    var PHONE = "33699751419"; // numéro WhatsApp (format international, sans +)
+    /* ============================================================= */
+
+    var $ = function(id){ return document.getElementById(id); };
+    var state = { formule:"stage", people:[] };
+    var nextId = 1;
+
+    function addPerson(level){
+      state.people.push({ id:nextId++, level:level||"primaire", weeks:1 });
+      render();
+    }
+    function removePerson(id){
+      state.people = state.people.filter(function(p){ return p.id!==id; });
+      render();
+    }
+
+    function eur(x){
+      var v = Math.round(x*100)/100;
+      var s = (v % 1 === 0) ? v.toFixed(0) : v.toFixed(2).replace(".",",");
+      return s + " €";
+    }
+
+    // Rang familial : on numérote les enfants (non-adultes) dans l'ordre d'ajout.
+    function childRanks(){
+      var rank = 0, map = {};
+      state.people.forEach(function(p){
+        if(p.level !== "adulte"){ rank++; map[p.id] = rank; }
+        else { map[p.id] = null; }
+      });
+      return map;
+    }
+
+    // Calcule le détail d'une personne -> { name, base, lines:[{label,amount}], subtotal }
+    function compute(p, rank, opts){
+      var lines = [];
+      if(state.formule === "stage"){
+        var cfg = CONFIG.stage[p.level];
+        var weekly = cfg.base, weeklyNote = "";
+        if(rank === 2){ weekly = cfg.second; weeklyNote = "tarif 2e enfant"; }
+        else if(rank >= 3){ weekly = cfg.base * (1 - CONFIG.thirdChildOff); weeklyNote = "3e enfant −15 %"; }
+
+        var weeksWord = p.weeks + " semaine" + (p.weeks>1 ? "s" : "");
+        var base = weekly + (p.weeks - 1) * weekly * (1 - CONFIG.extraWeekOff);
+
+        var detail = cfg.label + " · " + weeksWord;
+        if(weeklyNote) detail += " · " + weeklyNote;
+
+        var subtotal = base;
+        if(p.weeks > 1){
+          lines.push({ label:"dont −10 % sur "+(p.weeks-1)+" semaine"+(p.weeks-1>1?"s":""), discount:true,
+                       amount: -((p.weeks-1)*weekly*CONFIG.extraWeekOff) });
+        }
+        if(opts.parrainage){ var d = subtotal*CONFIG.parrainageOff; subtotal -= d;
+          lines.push({ label:"Parrainage −10 %", discount:true, amount:-d }); }
+
+        return { name:"Personne · "+cfg.label.split(" ")[0], detail:detail, lead:base, lines:lines, subtotal:subtotal };
+      } else {
+        var c = CONFIG.annee[p.level];
+        var monthly = c.base, note = "";
+        if(rank === 2){ monthly = c.base*(1-CONFIG.secondChildAnneeOff); note="2e enfant −10 %"; }
+        else if(rank >= 3){ monthly = c.base*(1-CONFIG.thirdChildAnneeOff); note="3e enfant −15 %"; }
+
+        var sub = monthly, detail2 = c.label + " · à l'année";
+        if(note){ lines.push({ label:note, discount:true, amount:-(c.base-monthly) }); }
+        if(opts.afterStage){ var da=sub*CONFIG.afterStageOff; sub-=da;
+          lines.push({ label:"Inscription après stage −10 %", discount:true, amount:-da }); }
+        if(opts.parrainage){ var dp=sub*CONFIG.parrainageOff; sub-=dp;
+          lines.push({ label:"Parrainage −10 %", discount:true, amount:-dp }); }
+
+        return { name:"Personne · "+c.label.split(" ")[0], detail:detail2, lead:c.base, lines:lines, subtotal:sub };
+      }
+    }
+
+    function render(){
+      // --- lignes formulaire ---
+      var wrap = $("sim-people");
+      wrap.innerHTML = "";
+      var ranks = childRanks();
+      var cfgSet = (state.formule==="stage") ? CONFIG.stage : CONFIG.annee;
+
+      state.people.forEach(function(p, i){
+        var row = document.createElement("div");
+        row.className = "sim-person" + (state.formule==="stage" ? " has-weeks":"");
+        var canRemove = state.people.length > 1;
+
+        var levelOpts = Object.keys(cfgSet).map(function(k){
+          return '<option value="'+k+'"'+(p.level===k?" selected":"")+'>'+cfgSet[k].label+'</option>';
+        }).join("");
+
+        var weeksField = "";
+        if(state.formule==="stage"){
+          var wo = [1,2,3,4].map(function(n){
+            return '<option value="'+n+'"'+(p.weeks===n?" selected":"")+'>'+n+' semaine'+(n>1?"s":"")+'</option>';
+          }).join("");
+          weeksField =
+            '<div class="sim-field"><label for="w'+p.id+'">Nombre de semaines</label>'+
+            '<select id="w'+p.id+'" data-w="'+p.id+'">'+wo+'</select></div>';
+        }
+
+        row.innerHTML =
+          '<div class="sim-person-top">'+
+            '<span class="sim-person-tag">👤 Personne '+(i+1)+'</span>'+
+            (canRemove ? '<button type="button" class="sim-remove" data-rm="'+p.id+'" aria-label="Retirer la personne '+(i+1)+'">×</button>' : '')+
+          '</div>'+
+          '<div class="sim-fields">'+
+            '<div class="sim-field"><label for="l'+p.id+'">Niveau</label>'+
+            '<select id="l'+p.id+'" data-l="'+p.id+'">'+levelOpts+'</select></div>'+
+            weeksField+
+          '</div>';
+        wrap.appendChild(row);
+      });
+
+      // --- option "après stage" visible uniquement pour les cours à l'année ---
+      $("sim-after-stage-wrap").hidden = (state.formule !== "annee");
+      if(state.formule !== "annee") $("sim-after-stage").checked = false;
+
+      // --- reçu ---
+      var opts = { parrainage: $("sim-parrainage").checked, afterStage: $("sim-after-stage").checked };
+      var body = $("sim-receipt-body");
+      body.innerHTML = "";
+      var total = 0;
+
+      if(state.people.length === 0){
+        body.innerHTML = '<div class="sim-empty">Ajoutez une personne pour voir l\'estimation.</div>';
+      }
+
+      state.people.forEach(function(p){
+        var r = compute(p, ranks[p.id], opts);
+        total += r.subtotal;
+
+        var head = document.createElement("div");
+        head.className = "sim-li";
+        head.innerHTML =
+          '<span class="sim-li-name">'+r.name+
+            '<span class="sim-li-detail">'+r.detail+'</span></span>'+
+          '<span class="sim-li-amount">'+eur(r.lead)+'</span>';
+        body.appendChild(head);
+
+        r.lines.forEach(function(ln){
+          var el = document.createElement("div");
+          el.className = "sim-li is-discount";
+          el.innerHTML = '<span class="sim-li-name">'+ln.label+'</span>'+
+                         '<span class="sim-li-amount">'+eur(ln.amount)+'</span>';
+          body.appendChild(el);
+        });
+      });
+
+      var unit = (state.formule==="stage") ? "au total" : "par mois";
+      $("sim-receipt-sub").textContent = (state.formule==="stage") ? "Stage d'été" : "Cours à l'année";
+      $("sim-total").textContent = state.people.length ? eur(total) : "—";
+      $("sim-total-unit").textContent = state.people.length ? unit : "";
+
+      var noteEl = $("sim-note");
+      if(state.formule==="annee" && state.people.length){
+        noteEl.textContent = "Soit env. " + eur(total*10) + " sur l'année (10 mois, sept. → juin).";
+      } else { noteEl.textContent = ""; }
+
+      // --- lien WhatsApp pré-rempli ---
+      buildWhatsApp(total, unit);
+    }
+
+    function buildWhatsApp(total, unit){
+      var ranks = childRanks();
+      var lines = ["Bonjour, voici ma situation pour un devis :"];
+      lines.push(state.formule==="stage" ? "• Formule : stage d'été (août)" : "• Formule : cours à l'année");
+      var cfgSet = (state.formule==="stage") ? CONFIG.stage : CONFIG.annee;
+      state.people.forEach(function(p,i){
+        var t = "• Personne "+(i+1)+" : "+cfgSet[p.level].label;
+        if(state.formule==="stage") t += " — "+p.weeks+" semaine"+(p.weeks>1?"s":"");
+        lines.push(t);
+      });
+      if($("sim-parrainage").checked) lines.push("• Parrainage : oui");
+      if($("sim-after-stage").checked) lines.push("• Inscription à l'année après un stage : oui");
+      if(state.people.length) lines.push("→ Estimation : "+eur(total)+" "+unit);
+      lines.push("Pouvez-vous me confirmer le tarif et les disponibilités ? Merci !");
+      $("sim-wa").href = "https://wa.me/"+PHONE+"?text="+encodeURIComponent(lines.join("\n"));
+    }
+
+    // --- événements ---
+    document.querySelectorAll("#simulateur .sim-toggle-btn").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.formule = btn.getAttribute("data-formule");
+        document.querySelectorAll("#simulateur .sim-toggle-btn").forEach(function(b){
+          var on = b===btn; b.classList.toggle("is-active",on); b.setAttribute("aria-selected", on?"true":"false");
+        });
+        render();
+      });
+    });
+    $("sim-people").addEventListener("change", function(e){
+      var t = e.target, id;
+      if((id = t.getAttribute("data-l"))){ getP(id).level = t.value; render(); }
+      else if((id = t.getAttribute("data-w"))){ getP(id).weeks = parseInt(t.value,10); render(); }
+    });
+    $("sim-people").addEventListener("click", function(e){
+      var id = e.target.getAttribute && e.target.getAttribute("data-rm");
+      if(id) removePerson(parseInt(id,10));
+    });
+    $("sim-add").addEventListener("click", function(){ addPerson(); });
+    $("sim-parrainage").addEventListener("change", render);
+    $("sim-after-stage").addEventListener("change", render);
+
+    function getP(id){ id=parseInt(id,10); return state.people.filter(function(p){return p.id===id;})[0]; }
+
+    // démarrage : une personne par défaut
+    addPerson("primaire");
+  })();
+  </script>
+</section>
 <!-- ================= CONTACT ================= -->
 <section id="contact">
   <div class="wrap">
