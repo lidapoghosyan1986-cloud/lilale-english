@@ -522,6 +522,10 @@
               <input type="checkbox" id="sim-after-stage">
               <span>📅 Inscription à l'année dans le mois suivant un stage <em>(−10 % sur le 1<sup>er</sup> mois, par élève)</em></span>
             </label>
+            <label class="sim-check" id="sim-parrainage-wrap" hidden>
+              <input type="checkbox" id="sim-parrainage">
+              <span>🤝 Parrainage <em>(−10 % sur un mois, une fois)</em></span>
+            </label>
             <p class="sim-parrainage-note">
               🤝 <strong>Parrainage :</strong> recommandez nos cours à un proche. À son inscription, vous bénéficiez
               tous deux de <strong>−10 % sur un mois</strong> — le parrain sur son mois suivant, le nouvel élève sur son
@@ -697,8 +701,11 @@
 
         $("sim-after-stage-wrap").hidden=(state.formule!=="annee");
         if(state.formule!=="annee") $("sim-after-stage").checked=false;
+        $("sim-parrainage-wrap").hidden=(state.formule!=="annee");
+        if(state.formule!=="annee") $("sim-parrainage").checked=false;
 
         var afterStage=$("sim-after-stage").checked;
+        var parrainage=$("sim-parrainage").checked;
         var body=$("sim-receipt-body"); body.innerHTML="";
         var total=0, subs=[];
         if(state.people.length===0) body.innerHTML='<div class="sim-empty">Ajoutez une personne pour voir l\'estimation.</div>';
@@ -716,6 +723,15 @@
           hasInsc=true; var reduc=0; subs.forEach(function(s){reduc+=s*CONFIG.afterStageOff;}); firstMonth=total-reduc;
         }
 
+        // Parrainage : −10 % sur un mois, une seule fois (n'affecte pas la mensualité récurrente)
+        var parrSaving=0;
+        if(state.formule==="annee" && state.people.length && parrainage){
+          parrSaving=total*0.10;
+          var pe=document.createElement("div"); pe.className="sim-li is-discount";
+          pe.innerHTML='<span class="sim-li-name">🤝 Parrainage −10 % (1 mois, une fois)</span><span class="sim-li-amount">'+eur(-parrSaving)+'</span>';
+          body.appendChild(pe);
+        }
+
         var unit=(state.formule==="stage")?"au total":"par mois";
         $("sim-receipt-sub").textContent=(state.formule==="stage")?"Stage d'été":"Cours à l'année";
         $("sim-total").textContent=state.people.length?eur(total):"—";
@@ -723,19 +739,25 @@
 
         var noteEl=$("sim-note");
         if(state.formule==="annee" && state.people.length){
-          if(hasInsc) noteEl.textContent="1er mois : "+eur(firstMonth)+" (inscription après stage −10 % par élève), puis "+eur(total)+" / mois. Soit env. "+eur(firstMonth+total*9)+" sur l'année (10 mois).";
-          else noteEl.textContent="Soit env. "+eur(total*10)+" sur l'année (10 mois, sept. → juin).";
+          var baseAnnual=hasInsc?(firstMonth+total*9):(total*10);
+          var annual=baseAnnual-parrSaving;
+          var txt="";
+          if(hasInsc) txt+="1er mois : "+eur(firstMonth)+" (inscription après stage −10 % par élève), puis "+eur(total)+" / mois. ";
+          if(parrainage) txt+="Parrainage : −"+eur(parrSaving)+" une fois (sur un mois). ";
+          txt+="Soit env. "+eur(annual)+" sur l'année (10 mois).";
+          noteEl.textContent=txt;
         } else noteEl.textContent="";
 
-        buildWhatsApp(total, unit, afterStage);
+        buildWhatsApp(total, unit, afterStage, parrainage);
       }
 
-      function buildWhatsApp(total, unit, afterStage){
+      function buildWhatsApp(total, unit, afterStage, parrainage){
         var cfgSet=(state.formule==="stage")?CONFIG.stage:CONFIG.annee;
         var lines=["Bonjour, voici ma situation pour un devis :"];
         lines.push(state.formule==="stage"?"• Formule : stage d'été (août)":"• Formule : cours à l'année");
         state.people.forEach(function(p,i){ var t="• Personne "+(i+1)+" : "+cfgSet[p.level].label; if(state.formule==="stage") t+=" — "+p.weeks+" semaine"+(p.weeks>1?"s":""); lines.push(t); });
         if(afterStage) lines.push("• Inscription à l'année après un stage : oui");
+        if(parrainage) lines.push("• Parrainage : oui");
         if(state.people.length) lines.push("→ Estimation : "+eur(total)+" "+unit);
         lines.push("Pouvez-vous me confirmer le tarif et les disponibilités ? Merci !");
         $("sim-wa").href="https://wa.me/"+PHONE+"?text="+encodeURIComponent(lines.join("\n"));
@@ -756,6 +778,7 @@
       $("sim-people").addEventListener("click", function(e){ var id=e.target.getAttribute&&e.target.getAttribute("data-rm"); if(id) removePerson(parseInt(id,10)); });
       $("sim-add").addEventListener("click", function(){ addPerson(); });
       $("sim-after-stage").addEventListener("change", render);
+      $("sim-parrainage").addEventListener("change", render);
 
       addPerson("primaire");
     })();
